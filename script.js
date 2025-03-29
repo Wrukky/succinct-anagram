@@ -88,7 +88,7 @@ function generateLetterTiles(word) {
 }
 
 function addLetterToInput(letter, tile) {
-    if (!gameActive) return; // Prevent input after game over
+    if (!gameActive) return; // Prevent input after game is over
     userInput += letter;
     document.getElementById("user-input").innerText = userInput;
     tile.style.visibility = "hidden";
@@ -169,7 +169,24 @@ async function generateSP1Proof() {
         const proof = `SP1-PROOF-${Math.random().toString(36).substring(7)}`;
         document.getElementById("proof-message").innerText = `Proof: ${proof}`;
         console.log("Generated SP1 Proof:", proof);
+
+        // Save the proof to disk as a text file
+        saveProofToDisk(proof);
+
+        // Optionally, you could verify the proof here
+        verifySP1Proof(proof);
     }, 2000);
+}
+
+async function verifySP1Proof(proof) {
+    // For now, let's assume a simple format check for valid proof
+    if (proof.startsWith("SP1-PROOF-")) {
+        console.log("Proof is valid");
+        return true;
+    } else {
+        console.error("Invalid proof");
+        return false;
+    }
 }
 
 // Start game when page loads
