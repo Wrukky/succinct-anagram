@@ -98,3 +98,18 @@ button:hover {
     color: green;
     margin-top: 10px;
 }
+#title {
+    background-color: #D5006C; /* Deep Pink */
+    color: white;
+    padding: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#title img {
+    margin: 0 10px;
+    height: 30px; /* Adjust the size of the image */
+}
