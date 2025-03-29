@@ -5,13 +5,72 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Succinct Anagram</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Deep Pink Title Background */
+        #title {
+            background-color: #D5006C; /* Deep Pink */
+            color: white;
+            padding: 10px;
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #title img {
+            margin: 0 10px;
+            height: 40px; /* Adjust the size of the image */
+        }
+
+        /* Game container styling */
+        .game-container {
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        .info-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        #scrambled-word, #letter-tiles, #user-input {
+            font-size: 20px;
+            margin: 20px 0;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        /* Add some space between the game-over message and the restart button */
+        #game-over {
+            font-size: 20px;
+            color: red;
+            text-align: center;
+        }
+
+        #restart-btn {
+            display: none;
+            font-size: 16px;
+        }
+
+        #prove-score {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <div class="game-container">
-        <h1 class="game-title">
-            <img src="succinct.png" style="height: 40px; vertical-align: middle; margin-right: 10px;">
-            Succinct Anagram
-        </h1>        
+        <div id="title">
+            <span>Succinct</span>
+            <img src="succinct.png" alt="Succinct" />
+            <span>Anagram</span>
+        </div>        
         
         <div class="info-bar">
             <span id="timer">60</span>
