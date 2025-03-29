@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Succinct Anagram</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <h1>
+            <img src="succinct.png" style="height: 70px; vertical-align: middle; margin-right: 30px;">
+            Succinct Anagram
+        </h1>        
+        
+        <div class="info-bar">
+            <span id="timer">60</span>
+            <span id="score">Score: 0</span>
+        </div>
+
+        <div id="scrambled-word"></div>
+        <div id="letter-tiles"></div>
+
+        <div id="user-input"></div>
+        
+        <button id="submit-btn" onclick="checkWord()">Submit</button>
+        <button id="clear-btn" onclick="clearInput()">Clear</button>
+
+        <p id="result-message"></p>
+
+        <button id="prove-score" onclick="generateSP1Proof()">Prove Your Score</button>
+        <p id="proof-message"></p>
+    </div>
+
+    <audio id="correctSound" src="https://www.fesliyanstudios.com/play-mp3/4383"></audio>
+    
+    <script src="script.js"></script>
+</body>
+</html>
