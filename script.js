@@ -11,7 +11,7 @@ async function fetchRandomWord() {
 
 const cryptoWords = [
     "succinct", "bitcoin", "wallet", "blockchain", "staking", "zkproof", "gprove", 
-    "airdrop", "ledger", "ethereum", "solana", "Ltwo", "modular", "rollup", "ZK", 
+    "airdrop", "ledger", "ethereum", "solana", "modular", "rollup", "ZK", 
     "prover", "validity", "zk", "zero", "knowledge", "prove"
 ];
 
