@@ -8,8 +8,8 @@
 </head>
 <body>
     <div class="game-container">
-        <h1>
-            <img src="succinct.png" style="height: 70px; vertical-align: middle; margin-right: 30px;">
+        <h1 class="game-title">
+            <img src="succinct.png" style="height: 40px; vertical-align: middle; margin-right: 10px;">
             Succinct Anagram
         </h1>        
         
@@ -30,10 +30,14 @@
 
         <button id="prove-score" onclick="generateSP1Proof()">Prove Your Score</button>
         <p id="proof-message"></p>
+
+        <!-- Game Over Message -->
+        <p id="game-over" style="display: none; font-size: 20px; color: red; text-align: center;"></p>
+
+        <!-- Restart Button -->
+        <button id="restart-btn" onclick="restartGame()" style="display: none;">Restart Game</button>
     </div>
 
-    <audio id="correctSound" src="https://www.fesliyanstudios.com/play-mp3/4383"></audio>
-    
     <script src="script.js"></script>
 </body>
 </html>
