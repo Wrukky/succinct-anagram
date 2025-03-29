@@ -11,8 +11,8 @@ async function fetchRandomWord() {
 
 const cryptoWords = [
     "succinct", "bitcoin", "wallet", "blockchain", "staking", "zkproof", "gprove", 
-    "airdrop", "ledger", "ethereum", "solana", "l2", "modular", "rollup", "zk", 
-    "prover", "validity", "proof", "zero", "knowledge", "prove"
+    "airdrop", "ledger", "ethereum", "solana", "L2", "modular", "rollup", "ZK", 
+    "prover", "validity", "zk", "zero", "knowledge", "prove"
 ];
 
 let score = 0;
@@ -22,7 +22,8 @@ let scrambledWord = "";
 let userInput = "";
 let timer;
 let scoreSheet = [];
-let usedWords = new Set(); // Track words already used
+let usedWords = new Set(); 
+let gameActive = true; // Controls if game is active
 
 async function startGame() {
     resetGame();
@@ -36,21 +37,30 @@ function resetGame() {
     score = 0;
     timeLeft = 60;
     scoreSheet = [];
-    usedWords.clear(); // Clear used words
+    usedWords.clear(); 
+    gameActive = true; // Game is now active
     document.getElementById("score").innerText = "Score: 0";
+    document.getElementById("timer").innerText = timeLeft;
+    document.getElementById("game-over").style.display = "none"; 
+    document.getElementById("restart-btn").style.display = "none"; 
+    document.getElementById("prove-score").style.display = "none"; // Hide proof button at start
+    document.getElementById("proof-message").innerText = ""; // Clear previous proof message
 }
 
 async function getNewWord() {
+    if (!gameActive) return; // Stop if game is over
+
     let newWord;
     do {
-        const isCryptoWord = Math.random() < 0.6; // 60% chance of a crypto-related word
+        const isCryptoWord = Math.random() < 0.6; // 60% chance of crypto-related words
         newWord = isCryptoWord
-            ? cryptoWords[Math.floor(Math.random() * cryptoWords.length)]
-            : await fetchRandomWord();
-    } while (usedWords.has(newWord)); // Ensure it's a new word
+            ? cryptoWords[Math.floor(Math.random() * cryptoWords.length)] // Take from crypto words
+            : await fetchRandomWord();  // Otherwise fetch a random word
+    } while (usedWords.has(newWord)); 
 
-    currentWord = newWord.toLowerCase(); // Normalize case
-    usedWords.add(currentWord); // Mark word as used
+    currentWord = newWord;
+    usedWords.add(currentWord); 
+    scrambledWord = shuffleWord(currentWord);
     updateWordDisplay();
 }
 
@@ -59,14 +69,6 @@ function shuffleWord(word) {
 }
 
 function updateWordDisplay() {
-    console.log("Current Word:", currentWord); // Debugging log
-    scrambledWord = shuffleWord(currentWord); // Scramble the word
-
-    if (!scrambledWord) {
-        console.error("Error: Scrambled word is empty!");
-        return;
-    }
-
     document.getElementById("scrambled-word").innerText = scrambledWord;
     generateLetterTiles(scrambledWord);
     document.getElementById("user-input").innerText = "";
@@ -86,29 +88,32 @@ function generateLetterTiles(word) {
 }
 
 function addLetterToInput(letter, tile) {
+    if (!gameActive) return; // Prevent input after game over
     userInput += letter;
     document.getElementById("user-input").innerText = userInput;
     tile.style.visibility = "hidden";
 }
 
 function clearInput() {
+    if (!gameActive) return;
     userInput = "";
     document.getElementById("user-input").innerText = "";
     document.querySelectorAll(".letter").forEach(tile => {
-        tile.style.visibility = "visible"; // Make letters visible again
+        tile.style.visibility = "visible"; 
     });
 }
 
 async function checkWord() {
-    if (await isRealWord(userInput)) {
-        if (!scoreSheet.some(entry => entry.word === userInput)) { // Check if the word was used before
+    if (!gameActive) return; // Stop checking words if game is over
+
+    if (await isRealWord(userInput) || cryptoWords.includes(userInput.toLowerCase())) {
+        if (!scoreSheet.some(entry => entry.word === userInput)) { 
             let wordScore = userInput.length * 10;
             score += wordScore;
             scoreSheet.push({ word: userInput, points: wordScore });
             document.getElementById("score").innerText = "Score: " + score;
         }
 
-        // Immediately remove current word and show a new one
         setTimeout(getNewWord, 500);
     } else {
         alert("Invalid word! Try again.");
@@ -116,23 +121,13 @@ async function checkWord() {
 }
 
 async function isRealWord(word) {
-    const whitelistedWords = new Set([
-        "succinct", "bitcoin", "wallet", "blockchain", "staking", "zkproof", "gprove", 
-        "airdrop", "ledger", "ethereum", "solana", "l2", "modular", "rollup", "zk", 
-        "prover", "validity", "proof", "zero", "knowledge", "prove"
-    ]);
-
-    // Ensure case insensitivity
-    const lowerWord = word.toLowerCase();
-
-    // If it's in the whitelist, return true immediately
-    if (whitelistedWords.has(lowerWord)) {
-        return true;
+    // Only check if the word is not a crypto-related word
+    if (cryptoWords.includes(word.toLowerCase())) {
+        return true;  // Skip dictionary check for crypto-related words
     }
 
-    // Otherwise, check in the dictionary API
     try {
-        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${lowerWord}`);
+        const response = await fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${word}`);
         return response.ok;
     } catch {
         return false;
@@ -147,25 +142,29 @@ function startTimer() {
             document.getElementById("timer").innerText = timeLeft;
         } else {
             clearInterval(timer);
-            showScoreSheet();
+            endGame(); 
         }
     }, 1000);
 }
 
-// ** Show Score Sheet at the End **
-function showScoreSheet() {
-    let message = "Game Over! Your Score: " + score + "\n\n";
-    scoreSheet.forEach(entry => {
-        message += `${entry.word}: +${entry.points} points\n`;
-    });
-    alert(message);
+// ** Show Game Over & Restart Option **
+function endGame() {
+    gameActive = false; // Stop game
+    document.getElementById("game-over").innerText = `Game Over! Your Score: ${score}`;
+    document.getElementById("game-over").style.display = "block";
+    document.getElementById("restart-btn").style.display = "block";
+    document.getElementById("prove-score").style.display = "block"; // Show proof button
+}
+
+// ** Restart the game **
+function restartGame() {
+    startGame();
 }
 
 // ** SP1 Proof Integration **
 async function generateSP1Proof() {
     document.getElementById("proof-message").innerText = "Generating SP1 Proof... ⏳";
 
-    // Simulate proof generation
     setTimeout(() => {
         const proof = `SP1-PROOF-${Math.random().toString(36).substring(7)}`;
         document.getElementById("proof-message").innerText = `Proof: ${proof}`;
